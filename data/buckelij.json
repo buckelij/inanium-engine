@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "handle": "buckelij",
+  "firstName": "Elijah",
+  "lastName": "Buck",
+  "emails": ["elijah.buck AT gmail", "buckelij AT ideasyncratic"],
+  "github": "https://github.com/buckelij",
+  "resume": "http://www.ideasyncratic.net/resume.html",
+  "blog": "inanium"
+}
