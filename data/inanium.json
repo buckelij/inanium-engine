@@ -2,5 +2,5 @@
   "id": 1,
   "title":"Inanium",
   "tagline": "This is a trash panda blog to play with GraphQL. No valuable content here.",
-  "entries-dir": "inanium"
+  "entriesDir": "inanium"
 }
