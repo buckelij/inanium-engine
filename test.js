@@ -17,7 +17,7 @@ const gql = tester({
     contentType: 'application/json'
 })
 
-const test = (msg) => {process.stdout.write(msg + ": ")}
+const test = (msg, fn) => {process.stdout.write(msg + ": ")}
 
 test("Test handle returned")
 gql(JSON.stringify(
@@ -29,7 +29,7 @@ gql(JSON.stringify(
         }`
     })
 ).then( (data) => {
-    assert.equal(JSON.parse(data.raw).data.person.handle, "bucelij")
+    assert.equal(JSON.parse(data.raw).data.person.handle, "buckelij")
     console.log("OK")
 }).catch(() => {console.log("FAIL")})
 
