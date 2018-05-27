@@ -3,6 +3,8 @@ import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import schema from './lib/schema';
 import { tester } from 'graphql-tester';
+import assert from 'assert'
+
 //import {create as createExpressWrapper} from 'node_modules/graphql-tester/src/main/servers/express.js';
 // Why doesn't ^ work?
 
@@ -15,13 +17,21 @@ const gql = tester({
     contentType: 'application/json'
 })
 
-// gql(JSON.stringify({query:'{query {person(handle: \"buckelij\"){handle}}'})).then( (data) => {
-//     console.log(JSON.stringify(data))
-// })
+const test = (msg) => {process.stdout.write(msg + ": ")}
 
-gql("{\"query\": \"{person(handle: \\\"buckelij\\\"){handle}}\"}").then( (data) => {
-    console.log(JSON.stringify(data))
-})
+test("Test handle returned")
+gql(JSON.stringify(
+    {query: `
+        {
+          person(handle: \"buckelij\"){
+            handle
+          }
+        }`
+    })
+).then( (data) => {
+    assert.equal(JSON.parse(data.raw).data.person.handle, "bucelij")
+    console.log("OK")
+}).catch(() => {console.log("FAIL")})
 
 //from node_modules/graphql-tester/src/main/servers/express.js
 function createExpressWrapper(app) {
@@ -42,7 +52,3 @@ function createExpressWrapper(app) {
         }
     };
 }
-
-
-// #works
-// curl -H 'Content-Type: application/json' -XPOST https://inanium-engine.glitch.me/graphql -d "{\"query\": \"{person(handle: \\\"buckelij\\\"){handle}}\"}"
