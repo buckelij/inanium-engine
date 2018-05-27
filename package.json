@@ -5,22 +5,23 @@
   "main": "server.js",
   "dependencies": {
     "apollo-server-express": "^1.3.0",
+    "atob": "^2.1.1",
     "body-parser": "^1.18.2",
+    "btoa": "^1.2.1",
     "casual": "^1.5.17",
     "express": "^4.16.2",
     "graphql": "^0.11.7",
     "graphql-tools": "^2.13.0",
     "lodash": "^4.17.4",
     "mongoose": "^4.13.2",
-    "node-fetch": "^1.7.3",
-    "sequelize": "^4.28.2",
     "sqlite": "^2.9.0",
-    "atob": "^2.1.1",
-    "btoa": "^1.2.1"
+    "sequelize": "^4.28.2",
+    "node-fetch": "^1.7.3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "graphql-tester": "0.0.5",
     "nodemon": "^1.12.1"
   },
   "babel": {
@@ -29,16 +30,17 @@
     ]
   },
   "scripts": {
-    "start": "nodemon ./server.js --exec babel-node"
+    "start": "nodemon ./server.js --exec babel-node",
+    "test": "babel-node ./test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apollographql/apollo-tutorial-kit.git"
+    "url": "git+https://github.com/buckelij/inanium-engine.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/apollographql/apollo-tutorial-kit/issues"
+    "url": "https://github.com/buckelij/inanium-engine/issues"
   },
-  "homepage": "https://github.com/apollographql/apollo-tutorial-kit#readme"
+  "homepage": "https://github.com/buckelij/inanium-engine#readme"
 }
