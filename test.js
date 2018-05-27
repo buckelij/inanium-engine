@@ -17,30 +17,57 @@ const gql = tester({
     contentType: 'application/json'
 })
 
-const startTest = (msg, fn) => {process.stdout.write(msg + ": ")}
-const okr = () => {console.log("OK")}
-const failr = () => {console.log("FAIL")}
+const okr = (msg) => {console.log("test " + msg + ": OK")}
+const failr = (msg) => {console.log("test " +msg + ": FAIL")}
 
-startTest("INANIUM_DATA set")
-if ("../test/data" === process.env["INANIUM_DATA"]){
-    console.log("OK")
-} else {
-    console.log("FAIL")
+{let test = "INANIUM_DATA set"
+    if ("../test/data" === process.env["INANIUM_DATA"]){
+        okr(test)
+    } else {
+        failr(test)
+    }
 }
 
-startTest("Test handle returned")
-gql(JSON.stringify(
-    {query: `
-        {
-          person(handle: \"buckelij\"){
-            handle
-          }
-        }`
+{let test = "handle returned" 
+     gql(JSON.stringify(
+        {query: `
+            {
+            person(handle: \"buckelij\"){
+                handle
+            }
+            }`
+        })
+    ).then( (data) => {
+        if(JSON.parse(data.raw).data.person.handle, "buckelij"){
+            okr(test)
+        } else {failr(test)}
     })
-).then( (data) => {
-    assert.equal(JSON.parse(data.raw).data.person.handle, "buckelij")
-    console.log("OK")
-}).catch(() => {console.log("FAIL")})
+}
+
+{let test = "returns a blog entry"
+    gql(JSON.stringify(
+        {query: `
+            {
+                person(handle: \"buckelij\"){
+                    blog{
+                        blogEntriesConnection(first:1){
+                        edges{
+                            node{
+                            body
+                            }
+                        }
+                        }
+                    }
+                }
+            }`
+        })
+    ).then(success => {
+        if(JSON.parse(success.raw).data.person.blog.blogEntriesConnection.edges[0].node.body.indexOf("Line1") != -1) {
+            okr(test)
+        } else {failr(test)}
+    }, error => {failr(test)})
+}
+
 
 //from node_modules/graphql-tester/src/main/servers/express.js
 function createExpressWrapper(app) {
