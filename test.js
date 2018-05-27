@@ -17,9 +17,18 @@ const gql = tester({
     contentType: 'application/json'
 })
 
-const test = (msg, fn) => {process.stdout.write(msg + ": ")}
+const startTest = (msg, fn) => {process.stdout.write(msg + ": ")}
+const okr = () => {console.log("OK")}
+const failr = () => {console.log("FAIL")}
 
-test("Test handle returned")
+startTest("INANIUM_DATA set")
+if ("../test/data" === process.env["INANIUM_DATA"]){
+    console.log("OK")
+} else {
+    console.log("FAIL")
+}
+
+startTest("Test handle returned")
 gql(JSON.stringify(
     {query: `
         {
