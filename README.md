@@ -8,6 +8,6 @@ Initially based on [How to build a GraphQL server](https://medium.com/apollo-sta
 
 ```bash
 npm install
-npm test
+./script/test.sh
 npm start
 ```
