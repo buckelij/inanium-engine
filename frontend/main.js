@@ -7,14 +7,28 @@ const client = new ApolloClient({
 
 client.query({
   query: gql`
-    query buckelij {
-      person(handle: "buckelij"){
-        id
+    query blogEntries {
+      person(handle:"buckelij"){
+        blog{
+          blogEntriesConnection(first: 3, after: null){
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            edges{
+              node{
+                date
+                body
+              }
+              cursor
+            }
+          }
+        }
       }
     }
   `,
 })
   .then(data => {console.log(data); document.body.innerHTML = JSON.stringify(data)})
   .catch(error => console.log(error));
-
-
