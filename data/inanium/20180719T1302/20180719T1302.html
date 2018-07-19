@@ -1,0 +1,15 @@
+<h2>iPhone iframe quirks</h2>
+
+<p>
+ A personal struggle/victory of the day: I'm building a simple website and it has an embedded Google Form. I found that if you scroll into the iframe on an iPhone, it steals focus permanently. The effect is that you have to click "harder" on links outside of the iframe. The following snippet fixes it by taking focus back when you "touch" outside of the iframe.
+<br>
+       <code>
+        <br>(function(d){ <br>
+          // fix "hard" link clicks caused by iphone fixation on iframe <br>
+          d.getElementsByTagName("BODY")[0].ontouchstart = function() { <br>
+          d.getElementsByTagName("BODY")[0].focus() <br>
+          }}(document)) <br>
+        </code>
+<br>
+This is terrible ¯(ツ)/¯
+<p>
