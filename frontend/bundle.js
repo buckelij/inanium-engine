@@ -15,16 +15,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-var client = new _apolloBoost2.default({
-  uri: 'https://inanium-engine.glitch.me/graphql'
-});
+document.addEventListener("DOMContentLoaded", function (event) {
+  var client = new _apolloBoost2.default({
+    uri: 'https://inanium-engine.glitch.me/graphql'
+  });
 
-client.query({
-  query: (0, _graphqlTag2.default)(_templateObject)
-}).then(function (data) {
-  console.log(data);document.body.innerHTML = JSON.stringify(data);
-}).catch(function (error) {
-  return console.log(error);
+  client.query({
+    query: (0, _graphqlTag2.default)(_templateObject)
+  }).then(function (data) {
+    console.log(data);
+    var blogwrapper = document.getElementById("blog");
+    var entries = data.data.person.blog.blogEntriesConnection.edges;
+    for (var i = 0; i < entries.length; i++) {
+      var entry = document.createElement("div");
+      entry.className = "blogentry";
+      entry.innerHTML = entries[i].node.body + "<hr>";
+      blogwrapper.appendChild(entry);
+    }
+    document.getElementById("loading").remove();
+  }).catch(function (error) {
+    return console.log(error);
+  });
 });
 
 },{"apollo-boost":2,"graphql-tag":16}],2:[function(require,module,exports){
