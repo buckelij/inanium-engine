@@ -1,7 +1,7 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['\n    query blogEntries {\n      person(handle:"buckelij"){\n        blog{\n          blogEntriesConnection(first: 3, after: null){\n            pageInfo {\n              hasNextPage\n              hasPreviousPage\n              startCursor\n              endCursor\n            }\n            edges{\n              node{\n                date\n                body\n              }\n              cursor\n            }\n          }\n        }\n      }\n    }\n  '], ['\n    query blogEntries {\n      person(handle:"buckelij"){\n        blog{\n          blogEntriesConnection(first: 3, after: null){\n            pageInfo {\n              hasNextPage\n              hasPreviousPage\n              startCursor\n              endCursor\n            }\n            edges{\n              node{\n                date\n                body\n              }\n              cursor\n            }\n          }\n        }\n      }\n    }\n  ']);
+var _templateObject = _taggedTemplateLiteral(['\n     query blogEntries($cursor: String) {\n       person(handle:"buckelij"){\n         blog{\n           blogEntriesConnection(first: 2, after: $cursor){\n             pageInfo {\n               hasNextPage\n               hasPreviousPage\n               startCursor\n               endCursor\n             }\n             edges{\n               node{\n                 date\n                 body\n               }\n               cursor\n             }\n           }\n         }\n       }\n     }\n   '], ['\n     query blogEntries($cursor: String) {\n       person(handle:"buckelij"){\n         blog{\n           blogEntriesConnection(first: 2, after: $cursor){\n             pageInfo {\n               hasNextPage\n               hasPreviousPage\n               startCursor\n               endCursor\n             }\n             edges{\n               node{\n                 date\n                 body\n               }\n               cursor\n             }\n           }\n         }\n       }\n     }\n   ']);
 
 var _apolloBoost = require('apollo-boost');
 
@@ -15,27 +15,59 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
-document.addEventListener("DOMContentLoaded", function (event) {
-  var client = new _apolloBoost2.default({
-    uri: 'https://inanium-engine.glitch.me/graphql'
-  });
+var client = new _apolloBoost2.default({
+  uri: 'https://inanium-engine.glitch.me/graphql'
+});
 
-  client.query({
-    query: (0, _graphqlTag2.default)(_templateObject)
-  }).then(function (data) {
-    console.log(data);
-    var blogwrapper = document.getElementById("blog");
-    var entries = data.data.person.blog.blogEntriesConnection.edges;
-    for (var i = 0; i < entries.length; i++) {
-      var entry = document.createElement("div");
-      entry.className = "blogentry";
-      entry.innerHTML = entries[i].node.body + "<hr>";
-      blogwrapper.appendChild(entry);
-    }
+var getBlogPage = function getBlogPage(cursor) {
+  console.log(cursor);
+  return client.query({
+    query: (0, _graphqlTag2.default)(_templateObject),
+    variables: { cursor: cursor }
+  });
+};
+
+var insertBlogEntries = function insertBlogEntries(data) {
+  console.log(data);
+  var blogwrapper = document.getElementById("blog");
+  var entries = data.data.person.blog.blogEntriesConnection.edges;
+  for (var i = 0; i < entries.length; i++) {
+    var entry = document.createElement("div");
+    entry.className = "blogentry";
+    entry.innerHTML = entries[i].node.body + "<hr>";
+    blogwrapper.appendChild(entry);
+  }
+  if (document.getElementById("loading")) {
     document.getElementById("loading").remove();
+  }
+  var loadButton = document.getElementById("loadmore");
+  //endCursor isn't implemented yet, so get the last cursor from the results
+  loadButton.setAttribute("data-cursor", data.data.person.blog.blogEntriesConnection.edges.slice(-1)[0].cursor);
+  loadButton.setAttribute("data-hasnextpage", data.data.person.blog.blogEntriesConnection.pageInfo.hasNextPage);
+};
+
+//load more button handler
+var loadNextPage = function loadNextPage() {
+  var loadButton = document.getElementById("loadmore");
+  var cursor = loadButton.getAttribute("data-cursor");
+  var hasNextPage = loadButton.getAttribute("data-hasnextpage");
+  if (hasNextPage === "true") {
+    getBlogPage(cursor).then(function (data) {
+      insertBlogEntries(data);
+    }).catch(function (error) {
+      return console.log(error);
+    });
+  }
+};
+
+//initial page load
+document.addEventListener("DOMContentLoaded", function (event) {
+  getBlogPage(null).then(function (data) {
+    insertBlogEntries(data);
   }).catch(function (error) {
     return console.log(error);
   });
+  document.getElementById("loadmore").addEventListener('click', loadNextPage);
 });
 
 },{"apollo-boost":2,"graphql-tag":16}],2:[function(require,module,exports){
