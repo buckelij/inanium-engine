@@ -4,22 +4,27 @@
   "description": "inanium blog engine",
   "main": "server.js",
   "dependencies": {
+    "@babel/node": "^7.4.5",
     "apollo-server": "^2.6.1",
     "atob": "^2.1.2",
-    "btoa": "^1.2.1",
-    "graphql": "^14.3.1"
+    "btoa": "^1.2.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "apollo-boost": "^0.4.1",
     "apollo-server-testing": "^2.6.1",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "graphql": "^14.3.1",
     "graphql-tag": "^2.10.1",
     "graphql-tester": "0.0.5",
     "nodemon": "^1.19.1"
   },
   "babel": {
     "presets": [
-      "env"
+      "@babel/preset-env"
     ]
   },
   "scripts": {
