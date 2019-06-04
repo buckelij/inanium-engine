@@ -1,90 +1,81 @@
-import express from 'express';
-import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
-import bodyParser from 'body-parser';
-import schema from './lib/schema';
-import { tester } from 'graphql-tester';
-import assert from 'assert'
+const { ApolloServer } = require('apollo-server')
+import { typeDefs, resolvers } from './lib/schema'
+const { createTestClient } = require('apollo-server-testing')
+const gql = require('graphql-tag');
+const graphQLServer = new ApolloServer({ typeDefs, resolvers })
+const { query } = createTestClient(graphQLServer)
 
-//import {create as createExpressWrapper} from 'node_modules/graphql-tester/src/main/servers/express.js';
-// Why doesn't ^ work?
+async function runTests() {
 
-const graphQLServer = express();
-graphQLServer.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
-
-const gql = tester({
-    server: createExpressWrapper(graphQLServer),
-    url: '/graphql',
-    contentType: 'application/json'
-})
-
-const okr = (msg) => {console.log("test " + msg + ": OK")}
-const failr = (msg) => {console.log("test " +msg + ": FAIL")}
-
-{let test = "INANIUM_DATA set"
-    if ("../test/data" === process.env["INANIUM_DATA"]){
-        okr(test)
-    } else {
-        failr(test)
+    let passed = true
+    const okr = (msg) => {
+        console.log("test " + msg + ": OK")
     }
-}
+    const failr = (msg) => {
+        console.log("test " +msg + ": FAIL")
+        passed = false
+    }
 
-{let test = "handle returned" 
-     gql(JSON.stringify(
-        {query: `
-            {
-            person(handle: \"buckelij\"){
-                handle
-            }
-            }`
-        })
-    ).then( (data) => {
-        if(JSON.parse(data.raw).data.person.handle, "buckelij"){
+    await (async () => {let test = "INANIUM_DATA set"
+        if ("../test/data" === process.env["INANIUM_DATA"]){
+            passed = true
             okr(test)
-        } else {failr(test)}
-    })
-}
+        } else {
+            failr(test)
+        }
+    })()
 
-{let test = "returns a blog entry"
-    gql(JSON.stringify(
-        {query: `
-            {
-                person(handle: \"buckelij\"){
-                    blog{
-                        blogEntriesConnection(first:1){
-                        edges{
-                            node{
-                            body
-                            }
-                        }
+    await (async () => {let test = "handle returned"
+        await query({ query: gql`
+            query($handle: String!) {
+                person(handle: $handle) {
+                    handle
+                }
+            }`, variables: { handle: "buckelij" } }
+        ).then( d => {
+            if(d.data.person.handle ===  "buckelij"){
+                okr(test)
+            } else {
+                failr(test)
+            }
+        }).catch(failr)
+    })()
+
+    await (async () => {let test = "returns a blog entry"
+        await query({ query: gql`
+            query($handle: String!) {
+                person(handle: $handle) {
+                    blog {
+                        blogEntriesConnection(first:1) {
+                            edges { node { body } }
                         }
                     }
                 }
-            }`
-        })
-    ).then(success => {
-        if(JSON.parse(success.raw).data.person.blog.blogEntriesConnection.edges[0].node.body.indexOf("Line1") != -1) {
-            okr(test)
-        } else {failr(test)}
-    }, error => {failr(test)})
+            }`, variables: { handle: "buckelij" } }
+        ). then(d => {
+            if(d.data.person.blog.blogEntriesConnection.edges[0].node.body.indexOf("Line1") != -1) {
+                okr(test)
+            } else {
+                failr(test)
+            }
+        }).catch(failr)
+    })()
+
+    return passed
 }
 
-
-//from node_modules/graphql-tester/src/main/servers/express.js
-function createExpressWrapper(app) {
-    return {
-        creator: (port) => {
-            return new Promise((resolve, reject) => {
-                const server = app.listen(port, () => {
-                    resolve({
-                        server: {
-                            shutdown: () => {
-                                server.close();
-                            }
-                        },
-                        url: `http://localhost:${port}`
-                    });
-                });
-            });
-        }
-    };
-}
+runTests().then( passed => {
+    if (passed) {
+        setTimeout(() => {
+            console.log("All tests passed")
+        }, 0)
+    } else {
+        setTimeout(() => {
+            console.log("One or more tests failed")
+            process.exit(1)
+        }, 0)
+    }
+}).catch( e => {
+    console.log("One or more tests failed")
+    process.exit(1)
+})
