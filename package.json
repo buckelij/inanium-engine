@@ -1,28 +1,25 @@
 {
   "name": "kit",
   "version": "1.0.0",
-  "description": "Starting point for the Apollo GraphQL Server tutorial.",
+  "description": "inanium blog engine",
   "main": "server.js",
   "dependencies": {
-    "apollo-server-express": "^1.3.0",
-    "atob": "^2.1.1",
-    "body-parser": "^1.18.2",
+    "apollo-server-express": "^1.4.0",
+    "atob": "^2.1.2",
+    "body-parser": "^1.19.0",
     "btoa": "^1.2.1",
-    "casual": "^1.5.17",
-    "express": "^4.16.2",
+    "casual": "^1.6.2",
+    "express": "^4.17.1",
     "graphql": "^0.11.7",
     "graphql-tools": "^2.13.0",
     "lodash": "^4.17.11",
-    "mongoose": "^4.13.2",
-    "sqlite": "^2.9.0",
-    "sequelize": "^5.3.0",
     "node-fetch": "^1.7.3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "graphql-tester": "0.0.5",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.19.1"
   },
   "babel": {
     "presets": [
@@ -37,7 +34,7 @@
     "type": "git",
     "url": "git+https://github.com/buckelij/inanium-engine.git"
   },
-  "author": "",
+  "author": "Elijah Buck",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/buckelij/inanium-engine/issues"
