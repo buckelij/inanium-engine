@@ -53,7 +53,7 @@ async function runTests() {
                 }
             }`, variables: { handle: "buckelij" } }
         ). then(d => {
-            if(d.data.person.blog.blogEntriesConnection.edges[0].node.body.indexOf("Line1") != -1) {
+            if(d.data.person.blog.blogEntriesConnection.edges[0].node.body.indexOf("Line7") != -1) {
                 okr(test)
             } else {
                 failr(test)
