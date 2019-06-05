@@ -68,6 +68,10 @@ var loadNextPage = function loadNextPage() {
       return console.log(error);
     });
   }
+
+  if (loadButton.getAttribute("data-hasnextpage") === "false") {
+    loadButton.disabled = true;
+  }
 }; //initial page load
 
 
