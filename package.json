@@ -5,7 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "@babel/node": "^7.8.7",
-    "apollo-server": "^2.11.0",
+    "apollo-server": "^2.14.2",
     "atob": "^2.1.2",
     "btoa": "^1.2.1"
   },
